@@ -34,5 +34,10 @@ Mocker.fn.isValid = function (path) {
   return this.store.has(path) && this.flag.has(path)
 };
 
+Mocker.fn.mock = function (path, f) {
+  this.set(path, f.call());
+  return this;
+};
+
 
 module.exports = Mocker.Mocker = Mocker;
