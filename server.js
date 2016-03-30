@@ -6,11 +6,9 @@
 var http = require('http');
 var nfix = require('nfix');
 var httpRequestForward = require('./forwarder').httpRequestForward;
-var Mocker = require('./mocker').Mocker;
 
-function createServer(forward, port) {
-  var mocker = Mocker();
-  var server = http.createServer(function (req, res) {
+function createMockerServer(mocker, forward, port) {
+  var server = http.createServer((req, res) => {
     var url = req.url.split('?')[0];
     if (mocker.isValid(url)) {
       res.writeHead(200, {'Content-Type':'application/json'});
@@ -21,4 +19,12 @@ function createServer(forward, port) {
   return port ? server.listen(port) : server;
 }
 
-module.exports = createServer.createServer = createServer;
+function createServer(forward, port) {
+  var server = http.createServer((req, res) => {
+    httpRequestForward(forward + req.url, req, res);
+  });
+  return port ? server.listen(port) : server;
+}
+
+module.exports.createServer = createServer;
+module.exports.createMockerServer = createMockerServer;
