@@ -30,8 +30,8 @@ Mocker.fn.disable = function (path) {
   return this;
 };
 
-Mocker.fn.disableAll = function (path) {
-  for (var [key, val] of this.store.entries()) {
+Mocker.fn.disableAll = function () {
+  for (var key of this.store.keys()) {
     this.flag.set(key, false);
   }
   return this;
